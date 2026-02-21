@@ -84,33 +84,6 @@
 
 
 <!-- ================= AMBASSADOR GRID ================= -->
-<section class="ca-rewards">
-    <div class="container">
-        <h2 class="ca-rewards-title">OUR <span>AMBASSADORS</span></h2>
-        <div class="ca-rewards-grid" style="grid-template-columns: repeat(3, 1fr);">
-            {% for ambassador in ambassadors %}
-            <div class="ca-reward-card">
-                <div class="ca-reward-icon" style="overflow: hidden; padding: 0;">
-                    {% if ambassador.image %}
-                    <img src="{{ ambassador.image.url }}" alt="{{ ambassador.name }}"
-                        style="width: 100%; height: 100%; object-fit: cover;">
-                    {% else %}
-                    <i class="fas fa-user"></i>
-                    {% endif %}
-                </div>
-                <h4>{{ ambassador.name }}</h4>
-                <p class="text-xs text-gray-500">{{ ambassador.college }}</p>
-                <p class="text-sm mt-2 text-gray-600">{{ ambassador.description|truncatechars:100 }}</p>
-            </div>
-            {% empty %}
-            <div style="grid-column: 1/-1; padding: 40px; color: #666;">
-                No campus ambassadors found. Check back soon or <a href="#apply" style="color: #ef4444;">be the first to
-                    apply!</a>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
 
 <!-- ================= ELIGIBILITY SECTION ================= -->
 <!-- ================= WHO CAN APPLY ================= -->
@@ -240,11 +213,12 @@
     </h2>
 
     <div class="apply-form">
-        <!-- Replace 'YOUR_FORM_ID' with the actual Google Form ID from the URL -->
-        <iframe src="https://docs.google.com/forms/d/e/PASTE_YOUR_GOOGLE_FORM_ID_HERE/viewform?embedded=true"
-            width="640" height="900" frameborder="0" marginheight="0" marginwidth="0">
+
+        <iframe src="https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?embedded=true" width="640" height="900"
+            frameborder="0" marginheight="0" marginwidth="0">
             Loading…
         </iframe>
+
     </div>
 
 </section>

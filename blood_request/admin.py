@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from .models import (
     BloodDonor, BloodRequest, Campaign, Report, Project, Task, SubTask,
     Announcement, Testimonial, StaffProfile, Interaction, Appointment,
-    PersonalNote, Team, SharedNote, NewsClipping, Blog, CampusAmbassador
+    PersonalNote, Team, SharedNote, NewsClipping, Blog
 )
 
 @admin.register(Testimonial)
@@ -110,14 +110,14 @@ class SharedNoteAdmin(admin.ModelAdmin):
 
 
 
+from .models import CampusAmbassador
+
+admin.site.register(CampusAmbassador)
+
+
 @admin.register(NewsClipping)
 class NewsClippingAdmin(admin.ModelAdmin):
     list_display = ('title', 'newspaper', 'date_display', 'created_at')
     search_fields = ('title', 'newspaper')
-
-@admin.register(CampusAmbassador)
-class CampusAmbassadorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'college', 'city', 'created_at')
-    search_fields = ('name', 'college', 'city')
 
 

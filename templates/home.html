@@ -71,7 +71,7 @@
             <a href="{% url 'project_list' %}" class="dropdown-item">Projects</a>
             <a href="#" class="dropdown-item">Our Activities</a>
             <a href="{% url 'blogs' %}" class="dropdown-item">Blogs</a>
-            <a href="{% url 'news_clippings' %}" class="dropdown-item">News Clippings</a>
+            <a href="#" class="dropdown-item">News Clippings</a>
             <a href="{% url 'resources' %}" class="dropdown-item">Resources</a>
           </div>
         </li>
@@ -452,7 +452,7 @@
 
       <div class="footer-col">
         <h3>Quick Links</h3>
-        <a href="{% url 'career_fellowship' %}">Career</a>
+        <a href="https://udaansociety.org/career-and-fellowship/">Career</a>
         <a href="https://udaansociety.org/contact-us/">Contact Us</a>
         <a href="https://udaansociety.org/process-flow/">Process Flow</a>
         <a href="#">Products/Services Details</a>
@@ -501,6 +501,7 @@
 
 
   <script>
+    {% load static %}
     const slides = [
       {
         title: "Har Ghar Jal Project",
