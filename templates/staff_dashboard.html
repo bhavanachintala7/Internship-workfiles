@@ -28,12 +28,11 @@
 <section class="max-w-7xl mx-auto">
     <div class="flex justify-between items-center mb-8">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">
-                {% now "H" as current_hour %}
-                {% if current_hour|add:"0" < 12 %} Good Morning, {% elif current_hour|add:"0" < 18 %} Good Afternoon, {%
-                    else %} Good Evening, {% endif %} {% if request.user.first_name %}{{ request.user.first_name }}{%
-                    else %}{{ request.user.username }}{% endif %} </h1>
-                    <p class="text-sm text-gray-500">Here's what's happening in your workspace today.</p>
+            <h1 class="text-2xl font-bold text-gray-800 uppercase">
+                HELLO {% if request.user.first_name %}{{ request.user.first_name }}{% else %}{{ request.user.username
+                }}{% endif %}
+            </h1>
+            <p class="text-sm text-gray-500">Here's what's happening in your workspace today.</p>
         </div>
         <div class="text-sm text-gray-500 bg-white px-3 py-1 rounded-full shadow-sm border border-gray-100">
             {% now "l, F jS" %}

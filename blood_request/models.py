@@ -354,23 +354,46 @@ class SharedNote(models.Model):
         return self.title
 
 
+
 class CampusAmbassador(models.Model):
-
     name = models.CharField(max_length=200)
-
     college = models.CharField(max_length=200)
-
     city = models.CharField(max_length=100)
-
-    image = models.ImageField(
-        upload_to="ambassadors/",
-        blank=True,
-        null=True
-    )
-
+    image = models.ImageField(upload_to="ambassadors/", blank=True, null=True)
     description = models.TextField()
-
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
+
+class CampusAmbassadorApplication(models.Model):
+    STATUS_CHOICES = [
+        ("Pending", "Pending"),
+        ("Reviewed", "Reviewed"),
+        ("Accepted", "Accepted"),
+        ("Rejected", "Rejected"),
+    ]
+    full_name = models.CharField(max_length=200)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    college = models.CharField(max_length=200)
+    city = models.CharField(max_length=100)
+    year_of_study = models.CharField(max_length=50)
+    interests = models.TextField(help_text="Why do you want to join as a Campus Ambassador?")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="Pending")
+    applied_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Application: {self.full_name} ({self.status})"
+
+class NewsClipping(models.Model):
+    title = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='news_clippings/')
+    newspaper = models.CharField(max_length=100)
+    date_display = models.CharField(max_length=50, help_text="e.g. June 2026")
+    summary = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
