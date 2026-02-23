@@ -9,28 +9,27 @@
 
 <!-- Volunteer Detail CSS -->
 <link rel="stylesheet" href="{% static 'css/blog_detail.css' %}">
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 
 <!-- ================= NEW HERO ================= -->
 
 <section class="volunteer-hero">
 
-    <div class="volunteer-hero-bg"></div>
+  <div class="volunteer-hero-bg"></div>
 
-    <div class="volunteer-hero-overlay"></div>
+  <div class="volunteer-hero-overlay"></div>
 
-    <div class="volunteer-hero-content">
+  <div class="volunteer-hero-content">
 
-        <h1>VOLUNTEER</h1>
+    <h1>VOLUNTEER</h1>
 
-        <p>
-            A person who willingly offers to take part in an enterprise
-            or undertake a task.
-        </p>
+    <p>
+      A person who willingly offers to take part in an enterprise
+      or undertake a task.
+    </p>
 
-    </div>
+  </div>
 
 </section>
 
@@ -84,150 +83,18 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
 
 </section>
 
-<!-- ================= GOOGLE FORM STYLE ================= -->
-
-<section class="volunteer-form-section">
-
-  <div class="form-card">
-
-    <!-- Header -->
-    <div class="form-header">
-      <h2>Volunteership @UDAAN Society</h2>
-
-      <p>
-        Looking to make a difference? Join <b>UDAAN Society’s Volunteership Program</b>
-        and be a part of impactful projects in education, health, environment,
-        and women empowerment 🌍.
-      </p>
+<!-- ================= GOOGLE FORM IFRAME ================= -->
+<section class="volunteer-form-section" style="padding: 60px 0; text-align: center;">
+  <div class="container" style="max-width: 800px; margin: 0 auto;">
+    <h2 style="font-size: 28px; font-weight: 700; color: #333; margin-bottom: 20px;">Volunteership @UDAAN Society</h2>
+    <div class="apply-form"
+      style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #eee;">
+      <iframe src="https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?embedded=true" width="100%" height="900"
+        frameborder="0" marginheight="0" marginwidth="0" style="max-width: 640px; border-radius: 8px;">
+        Loading…
+      </iframe>
     </div>
-
-
-    <!-- Info -->
-    <div class="form-info">
-      <p>
-        <a href="#">Sign in to Google</a> to save your progress.
-        <a href="#">Learn more</a>
-      </p>
-
-      <span class="required">* Indicates required question</span>
-    </div>
-
-
-    <!-- FORM -->
-    <form method="post" class="google-form-style">
-
-      {% csrf_token %}
-
-      <!-- Email -->
-      <div class="form-field">
-        <label>Email <span>*</span></label>
-        <input type="email" required placeholder="Your email">
-      </div>
-
-      <!-- Name -->
-      <div class="form-field">
-        <label>Full Name <span>*</span></label>
-        <input type="text" required placeholder="Your answer">
-      </div>
-
-      <!-- Phone -->
-      <div class="form-field">
-        <label>Phone No. <span>*</span></label>
-        <input type="tel" required placeholder="Your answer">
-      </div>
-
-      <!-- Gender -->
-      <div class="form-field">
-        <label>Gender <span>*</span></label>
-        <input type="text" required placeholder="Your answer">
-      </div>
-
-
-      <!-- Education -->
-      <div class="form-field">
-        <label>Education Status <span>*</span></label>
-
-        <div class="check-group">
-          <label><input type="checkbox"> High School</label>
-          <label><input type="checkbox"> Undergraduate</label>
-          <label><input type="checkbox"> Postgraduate</label>
-          <label>
-            <input type="checkbox"> Other
-            <input type="text" class="other-input">
-          </label>
-        </div>
-      </div>
-
-
-      <!-- Employment -->
-      <div class="form-field">
-        <label>Employment Status <span>*</span></label>
-
-        <div class="check-group">
-          <label><input type="checkbox"> Salaried</label>
-          <label><input type="checkbox"> Self-Employed</label>
-          <label><input type="checkbox"> Housewife</label>
-          <label><input type="checkbox"> Student</label>
-          <label><input type="checkbox"> Retired</label>
-          <label><input type="checkbox"> Other</label>
-        </div>
-      </div>
-
-
-      <!-- CV -->
-      <div class="form-field">
-        <label>CV Link <span>*</span></label>
-        <input type="url" required placeholder="Your answer">
-      </div>
-
-
-      <!-- Residence -->
-      <div class="form-field">
-        <label>Residence (City, State) <span>*</span></label>
-        <input type="text" required placeholder="Your answer">
-      </div>
-
-
-      <!-- Buttons -->
-      <div class="form-actions">
-
-        <button type="submit" class="submit-btn">
-          Submit
-        </button>
-
-        <a href="#" class="clear-btn">Clear form</a>
-
-      </div>
-
-    </form>
-
   </div>
-
-  <!-- ================= FORM FOOTER ================= -->
-
-<div class="google-form-footer">
-
-  <p class="form-warning">
-    Never submit passwords through Google Forms.
-  </p>
-
-  <div class="form-footer-bottom">
-
-    <div class="form-left">
-      <span class="question-icon">?</span>
-      <span class="google-text">Google Forms</span>
-    </div>
-
-    <div class="form-right">
-      This form was created inside of UDAAN Society.
-      <span class="dots">⋮</span>
-    </div>
-
-  </div>
-
-</div>
-
-
 </section>
 
 
