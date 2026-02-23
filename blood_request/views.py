@@ -104,7 +104,6 @@ def blood_request_create(request):
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=500)
     return JsonResponse({"success": False, "error": "Invalid request method."}, status=405)
-    return JsonResponse({"success": False, "error": "Invalid request method."}, status=405)
 
 from .models import Campaign, Report, Project
 
@@ -337,8 +336,6 @@ def blog_detail(request, id):
         'blog': blog,
         'recent_blogs': recent_blogs
     })
-
-    return render(request, 'annual_reports.html', {'reports': reports})
 
 
 
@@ -686,11 +683,6 @@ def blog_create(request):
         form = BlogForm()
         
     return render(request, 'blood_request/blog_form.html', {'form': form})
-    initial_team = request.GET.get('team')
-    return render(request, 'blood_request/shared_note_form.html', {
-        'teams': user_teams, 
-        'initial_team': int(initial_team) if initial_team else None
-    })
 
 @login_required
 def shared_note_detail(request, pk):
@@ -839,14 +831,11 @@ def campus_ambassador(request):
         }
     )
 
-<<<<<<< HEAD
 def jobs(request):
     return render(request, "jobs.html")
-=======
+
 def news_clippings(request):
     from .models import NewsClipping
     clippings = NewsClipping.objects.all().order_by('-created_at')
     return render(request, 'news_clippings.html', {'clippings': clippings})
 
-
->>>>>>> 0e025d3c7781009c65a8f77b98dd8289d2891732
