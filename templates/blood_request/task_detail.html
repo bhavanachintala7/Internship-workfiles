@@ -1,0 +1,170 @@
+{% extends 'portal_layout.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Breadcrumb & Header -->
+    <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2 text-sm text-gray-500">
+            <a href="{% url 'staff_dashboard' %}" class="hover:text-brand-red transition">Dashboard</a>
+            <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+            <span class="text-gray-900 font-bold">Task #{{ task.pk }}</span>
+        </div>
+        <div class="flex space-x-3">
+            <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider
+                {% if task.priority == 'Critical' %} bg-red-100 text-red-700
+                {% elif task.priority == 'High' %} bg-orange-100 text-orange-700
+                {% elif task.priority == 'Medium' %} bg-blue-100 text-blue-700
+                {% else %} bg-gray-100 text-gray-700 {% endif %}">
+                {{ task.priority }} Priority
+            </span>
+            <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-gray-800 text-white">
+                {{ task.status }}
+            </span>
+        </div>
+    </div>
+
+    <!-- Task Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-8">
+            <h1 class="text-2xl font-bold text-gray-900 mb-4">{{ task.title }}</h1>
+
+            {% if task.description %}
+            <div class="prose prose-sm max-w-none text-gray-600 mb-6 pb-6 border-b border-gray-50">
+                {{ task.description|linebreaks }}
+            </div>
+            {% endif %}
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Assigned
+                        To</label>
+                    <div class="flex items-center text-sm font-medium text-gray-800">
+                        {% if task.assigned_to %}
+                        <div
+                            class="w-6 h-6 rounded-full bg-brand-dark text-white flex items-center justify-center text-[10px] font-bold mr-2">
+                            {{ task.assigned_to.username|slice:":1"|upper }}
+                        </div>
+                        {{ task.assigned_to.get_full_name|default:task.assigned_to.username }}
+                        {% else %}
+                        Unassigned
+                        {% endif %}
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Due
+                        Date</label>
+                    <span
+                        class="text-sm font-medium {% if task.is_overdue %}text-red-600{% else %}text-gray-800{% endif %}">
+                        {{ task.due_date|date:"M d, Y"|default:"No Due Date" }}
+                    </span>
+                </div>
+                <div>
+                    <label
+                        class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Project</label>
+                    <span class="text-sm font-medium text-gray-800">
+                        {{ task.project.title|default:"General" }}
+                    </span>
+                </div>
+                <div>
+                    <label
+                        class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Created</label>
+                    <span class="text-sm font-medium text-gray-800">
+                        {{ task.created_at|date:"M d, Y" }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SubTasks Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-bold text-gray-800 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4">
+                    </path>
+                </svg>
+                Checklist / Sub-Tasks
+            </h2>
+            <span class="text-xs font-bold text-gray-400 bg-gray-100 px-3 py-1 rounded-full">
+                {{ task.subtasks.count }} limits
+            </span>
+        </div>
+
+        <div class="space-y-3 mb-6" id="subtask-list">
+            {% for sub in task.subtasks.all %}
+            <div
+                class="flex items-center justify-between p-3 bg-gray-50 rounded-lg group hover:bg-gray-100 transition-colors">
+                <label class="flex items-center cursor-pointer flex-1">
+                    <input type="checkbox"
+                        class="w-5 h-5 text-brand-red border-gray-300 rounded focus:ring-brand-red cursor-pointer transition-colors subtask-checkbox"
+                        data-id="{{ sub.id }}" {% if sub.status=='Done' %}checked{% endif %}>
+                    <span
+                        class="ml-3 text-sm font-medium {% if sub.status == 'Done' %}text-gray-400 line-through{% else %}text-gray-700{% endif %} transition-all subtask-title">{{
+                        sub.title }}</span>
+                </label>
+                {% if sub.assigned_to %}
+                <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider ml-4">{{
+                    sub.assigned_to.username }}</span>
+                {% endif %}
+            </div>
+            {% empty %}
+            <div class="text-center py-6 text-gray-400 italic text-sm">No sub-tasks added yet.</div>
+            {% endfor %}
+        </div>
+
+        <!-- Add SubTask Form -->
+        <form method="POST" action="{% url 'subtask_add' task.pk %}" class="flex items-center mt-4">
+            {% csrf_token %}
+            <input type="text" name="title" required placeholder="Add a new sub-task..."
+                class="flex-1 bg-white border border-gray-300 rounded-l-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-all">
+            <button type="submit"
+                class="bg-gray-800 text-white px-6 py-2.5 rounded-r-lg text-sm font-bold hover:bg-gray-900 transition-colors">
+                Add
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const checkboxes = document.querySelectorAll(".subtask-checkbox");
+        checkboxes.forEach(chk => {
+            chk.addEventListener("change", function () {
+                const subId = this.dataset.id;
+                const newStatus = this.checked ? "Done" : "To Do";
+                const titleEl = this.nextElementSibling;
+
+                fetch(`/admin/portal/subtask/${subId}/update/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                })
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            if (newStatus === 'Done') {
+                                titleEl.classList.add('text-gray-400', 'line-through');
+                                titleEl.classList.remove('text-gray-700');
+                            } else {
+                                titleEl.classList.remove('text-gray-400', 'line-through');
+                                titleEl.classList.add('text-gray-700');
+                            }
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        this.checked = !this.checked; // revert
+                    });
+            });
+        });
+    });
+</script>
+{% endblock %}

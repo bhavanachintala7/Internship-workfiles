@@ -222,6 +222,52 @@ def update_task_status(request, pk):
     
     return redirect('staff_dashboard')
 
+
+@login_required
+def task_detail(request, pk):
+    task = get_object_or_404(Task, pk=pk)
+    # Both assigned users and managers can view
+    return render(request, 'blood_request/task_detail.html', {'task': task})
+
+@login_required
+@require_POST
+def subtask_add(request, pk):
+    task = get_object_or_404(Task, pk=pk)
+    title = request.POST.get('title')
+    if title:
+        SubTask.objects.create(
+            parent_task=task,
+            title=title,
+            assigned_to=task.assigned_to,
+            status='To Do'
+        )
+    return redirect('task_detail', pk=task.pk)
+
+@login_required
+@require_POST
+def subtask_update(request, sub_pk):
+    subtask = get_object_or_404(SubTask, pk=sub_pk)
+    is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.content_type == 'application/json'
+    
+    if is_ajax:
+        import json
+        try:
+            data = json.loads(request.body)
+            new_status = data.get('status')
+            if new_status in dict(SubTask.STATUS_CHOICES):
+                subtask.status = new_status
+                subtask.save()
+                return JsonResponse({'status': 'success', 'new_status': subtask.status})
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error'}, status=400)
+            
+    # Fallback
+    new_status = request.POST.get('status')
+    if new_status in dict(SubTask.STATUS_CHOICES):
+        subtask.status = new_status
+        subtask.save()
+    return redirect('task_detail', pk=subtask.parent_task.pk)
+
 from django.contrib.auth.decorators import user_passes_test
 
 def is_manager(user):
@@ -374,11 +420,30 @@ def donor_detail(request, pk):
     interactions = Interaction.objects.filter(
         content_type=ct, 
         object_id=donor.id
-    ).order_by('-created_at')
+    )
+
+    donations = donor.donations.all()
+
+    timeline = []
+    for i in interactions:
+        timeline.append({
+            'type': 'interaction',
+            'date': i.created_at,
+            'obj': i,
+        })
+    
+    for d in donations:
+        timeline.append({
+            'type': 'donation',
+            'date': d.created_at,
+            'obj': d,
+        })
+
+    timeline.sort(key=lambda x: x['date'], reverse=True)
 
     return render(request, 'blood_request/donor_detail.html', {
         'donor': donor,
-        'interactions': interactions,
+        'timeline': timeline,
         'interaction_types': Interaction.INTERACTION_TYPES,
     })
 
@@ -665,6 +730,7 @@ def task_create(request):
     else:
         form = TaskForm()
         
+    return render(request, 'blood_request/task_form.html', {'form': form})
 
 @login_required
 @permission_required('blood_request.add_blog', raise_exception=True)

@@ -33,7 +33,19 @@ This checklist covers the recent major updates to the Staff & Manager Portal (Ph
 - [x] **Visual Calendar**: FullCalendar integration in Staff Dashboard for Tasks/Appointments.
 - [x] **Smart Heuristics**: "Best Time to Call" insight on Donor Detail page.
 
-## 6. Verification
+## 6. Team Spaces & Kanban (Phase 17)
+- [x] **Team Management**: Manager can create teams and add members.
+- [x] **Kanban Board**: Interactive Drag-and-Drop tasks between columns.
+- [x] **Team Visibility**: Shared board for all team members.
+- [x] **Manager Overview**: Aggregated Kanban board for all tasks in "Team Overview".
+
+## 7. Jira-Style Navigation & Workspaces (Phase 22)
+- [x] **Quick Switcher**: Ctrl+K style quick navigation added to the Sidebar search icon.
+- [x] **Quick Add FAB**: Floating button added to create Tasks, Notes, and Teams instantly.
+- [x] **Unified Timeline View**: Merged visual interaction history inside Donor Details page.
+- [x] **Sub-Tasks UI**: Checkable checklist format integrated into the Task detailed modal overlay.
+
+## 8. Verification
 - [x] **Staff Access**: Verified `staff1` can access the new layout and features.
 - [x] **Manager Access**: Verified `manager1` sees the "Team Overview" in the sidebar.
 - [x] **Responsiveness**: Verified layout works on mobile (hamburger menu for sidebar).

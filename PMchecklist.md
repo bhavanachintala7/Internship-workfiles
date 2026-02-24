@@ -9,7 +9,7 @@ This document tracks the implementation status of the Project Management (PM) an
 - [x] **Task Status Tracking**: Staff can update status (`To Do` -> `In Progress` -> `Done`) via Dashboard.
 - [x] **Prioritization**: Tasks support `High`, `Medium`, `Low`, `Critical` priorities with visual badges.
 - [x] **Sub-Tasks**: Database model supports task decomposition.
-  - [ ] *Pending*: UI validation to view/edit sub-tasks in the portal.
+  - [x] *Pending*: UI validation to view/edit sub-tasks in the portal.
 - [x] **Team View**: Managers can view all tasks across the organization.
 
 ### Dashboards & Views
@@ -34,7 +34,7 @@ This document tracks the implementation status of the Project Management (PM) an
 ### Interaction Tracking (Biziverse-Style)
 - [x] **Interaction Model**: Database structure to log Calls, Meetings, Emails, and Visits (`Interaction` model).
 - [x] **Outcome Tracking**: Support for outcomes like "Interested", "Follow-up", "Closed".
-- [ ] **Interaction Logging UI**: Frontend forms for staff to record calls/meetings.
+- [x] **Interaction Logging UI**: Frontend forms for staff to record calls/meetings.
 - [ ] **Auto-Task Generation**: Logic to automatically create follow-up tasks based on interaction outcomes.
 
 ### Scheduling
@@ -60,7 +60,7 @@ This document tracks the implementation status of the Project Management (PM) an
 
 ### Biziverse Interconnectedness (Unified Interactions)
 - [x] **Interaction Logging**: Calls/Emails/Meetings tracking (partially done in CRM).
-- [ ] **Timeline View**: A single view showing history of a donor (donations, calls, tasks).
+- [x] **Timeline View**: A single view showing history of a donor (donations, calls, tasks).
 
 ### Zoho Workflow Rules (Automated Workflows)
 - [X] **Data Model**: Configurable "Rules" model (Trigger -> Condition -> Action).
@@ -71,7 +71,7 @@ This document tracks the implementation status of the Project Management (PM) an
 - [X] **Transition Guards**: Logic to prevent skipping steps (e.g., cannot Donate without Screening).
 
 ### Zoho Zia (Intelligence Layer)
-- [ ] **Donor Scoring**: Script to calculate engagement score (Recency/Frequency).
+- [x] **Donor Scoring**: Script to calculate engagement score (Recency/Frequency).
 - [x] **Heuristic Suggestions**: "Best time to call" based on donor history.
 
 ### Zoho Canvas (Visual Design)
