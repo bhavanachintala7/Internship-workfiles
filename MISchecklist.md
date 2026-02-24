@@ -36,14 +36,14 @@ This checklist focuses on the **Management Information System (MIS)**, including
 - [x] **Global Task View**: See tasks assigned to *anyone*, sorted by priority/status.
 - [x] **Critical Alerts**: Highlight `Critical` priority tasks at the top.
 - [x] **Statistics**: Quick summary of `Pending` vs `Completed` tasks.
-- [ ] **Workload Visualizer**: (Pending) Charts showing tasks per staff member.
+- [x] **Workload Visualizer**: (Pending) Charts showing tasks per staff member.
 
 ## 4. Reporting & Analytics
 - [x] **Operational Reports**:
   - [x] Blood Request fulfillment status (via filtering).
   - [x] Active Project timelines.
 - [ ] **Advanced MIS Reports** (Pending):
-  - [ ] **Export to CSV/PDF**: Button to download Donor Registry or Task logs.
+  - [x] **Export to CSV/PDF**: Button to download Donor Registry or Task logs.
   - [ ] **Audit Logs**: Who changed what (using `django-simple-history` or similar).
   - [ ] **Trend Analysis**: "Donations per Month" charts.
 
