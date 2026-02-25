@@ -112,13 +112,6 @@ class SharedNoteAdmin(admin.ModelAdmin):
 
 from .models import CampusAmbassador, CampusAmbassadorApplication
 
-admin.site.register(CampusAmbassador)
-
-@admin.register(CampusAmbassadorApplication)
-class CampusAmbassadorApplicationAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'college', 'city', 'status', 'applied_at')
-    list_filter = ('status', 'city')
-    search_fields = ('full_name', 'email', 'college')
 
 
 @admin.register(NewsClipping)
