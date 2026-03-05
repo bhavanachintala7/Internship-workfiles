@@ -36,4 +36,6 @@ urlpatterns = [
     #     name='ambassador_detail'
     # ),
 
+   path('our-mission-values/', views.our_mission_values, name='our_mission_values'),
+
 ]

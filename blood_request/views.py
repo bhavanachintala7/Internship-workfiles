@@ -907,3 +907,6 @@ def news_clippings(request):
 
 def internships(request):
     return render(request, 'internships.html')
+
+def our_mission_values(request):
+    return render(request, 'ourmission_values.html')
