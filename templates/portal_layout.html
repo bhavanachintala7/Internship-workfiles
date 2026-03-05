@@ -205,23 +205,76 @@
             </a>
 
             <p
-                class="px-3 text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 mt-6 group-[.collapsed]/sidebar:hidden">
-                Productivity</p>
+                class="px-3 text-[11px] font-bold text-gray-400/80 uppercase tracking-wider mb-1 mt-6 group-[.collapsed]/sidebar:hidden">
+                Private
+            </p>
             <div
-                class="border-b border-gray-100 mb-2 pb-2 md:hidden group-[.collapsed]/sidebar:border-b group-[.collapsed]/sidebar:border-gray-100 group-[.collapsed]/sidebar:mb-2 group-[.collapsed]/sidebar:pb-2 block">
+                class="border-b border-gray-100 mb-1 pb-1 md:hidden group-[.collapsed]/sidebar:border-b group-[.collapsed]/sidebar:border-gray-100 group-[.collapsed]/sidebar:mb-2 group-[.collapsed]/sidebar:pb-2 block">
             </div>
 
+            <!-- Legacy Personal Notes Icon (Top level) -->
             <a href="#" onclick="toggleNotes()"
-                class="flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-gray-50 text-gray-600 hover:text-gray-900 group relative"
-                title="Personal Notes">
+                class="flex items-center px-3 py-1.5 rounded-md text-sm font-medium transition-colors hover:bg-gray-100 text-gray-600 hover:text-gray-900 group relative mb-3"
+                title="Personal Scratchpad">
                 <svg class="w-5 h-5 mr-3 text-gray-400 group-hover:text-yellow-500 transition-colors shrink-0 group-[.collapsed]/sidebar:mr-0"
                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
                     </path>
                 </svg>
-                <span class="group-[.collapsed]/sidebar:hidden whitespace-nowrap">Personal Notes</span>
+                <span class="group-[.collapsed]/sidebar:hidden whitespace-nowrap">Personal Scratchpad</span>
             </a>
+
+            <!-- Shared Notes / Wiki Tree -->
+            <div class="group-[.collapsed]/sidebar:hidden px-2 mb-4">
+                {% if shared_notes_tree %}
+                <div class="mt-0.5 space-y-0.5">
+                    {% for note in shared_notes_tree %}
+                    <div>
+                        <div
+                            class="flex items-center justify-between px-1.5 py-1 rounded-md text-sm text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer group/item">
+                            {% if note.child_notes.exists %}
+                            <button type="button"
+                                class="text-gray-400 hover:text-gray-600 focus:outline-none w-5 h-5 flex items-center justify-center rounded-sm hover:bg-gray-200 transition-colors mr-1 shrink-0"
+                                onclick="toggleTree('note-tree-{{ note.pk }}', this); event.preventDefault();">
+                                <i class="fa-solid fa-caret-right text-xs transition-transform duration-200"
+                                    id="icon-{{ note.pk }}"></i>
+                            </button>
+                            {% else %}
+                            <div class="w-5 h-5 mr-1 shrink-0"></div>
+                            {% endif %}
+
+                            <a href="{% url 'shared_note_detail' note.pk %}"
+                                class="flex-1 truncate inline-flex items-center font-medium" title="{{ note.title }}">
+                                <i class="fa-solid fa-book text-xs text-brand-blue opacity-70 mr-2"></i>
+                                <span class="truncate">{{ note.title }}</span>
+                            </a>
+
+                            <a href="{% url 'shared_note_create' %}?parent={{ note.pk }}"
+                                class="opacity-0 group-hover/item:opacity-100 text-gray-400 hover:text-gray-600 transition-opacity p-1 rounded-sm hover:bg-gray-200 ml-1"
+                                title="Add Page Inside">
+                                <i class="fa-solid fa-plus text-[10px]"></i>
+                            </a>
+                        </div>
+
+                        {% if note.child_notes.exists %}
+                        <div id="note-tree-{{ note.pk }}" class="hidden">
+                            {% include "blood_request/sidebar_note_tree.html" with notes=note.child_notes.all %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-[11px] text-gray-400 italic px-2">No pages inside</p>
+                {% endif %}
+
+                <a href="{% url 'shared_note_create' %}"
+                    class="mt-2 flex items-center px-1.5 py-1 text-sm text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors font-medium">
+                    <i class="fa-solid fa-plus w-5 h-5 flex items-center justify-center text-xs mr-1 opacity-70"></i>
+                    Add a page
+                </a>
+            </div>
         </nav>
 
         <!-- Footer Actions -->
@@ -536,6 +589,19 @@
                         });
                 }, 1000);
             });
+        }
+
+        // Tree Toggle Logic for Team Wikis
+        function toggleTree(treeId, btn) {
+            const tree = document.getElementById(treeId);
+            const icon = btn.querySelector('i');
+            if (tree.classList.contains('hidden')) {
+                tree.classList.remove('hidden');
+                icon.classList.add('rotate-90');
+            } else {
+                tree.classList.add('hidden');
+                icon.classList.remove('rotate-90');
+            }
         }
 
         // Quick Switcher Logic

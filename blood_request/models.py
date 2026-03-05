@@ -170,6 +170,17 @@ class Task(models.Model):
     completion_lng = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     completion_timestamp = models.DateTimeField(null=True, blank=True)
 
+    # Recurring Tasks (Phase 28)
+    RECURRENCE_CHOICES = [
+        ('none', 'None'),
+        ('daily', 'Daily'),
+        ('weekly', 'Weekly'),
+        ('biweekly', 'Every 2 Weeks'),
+        ('monthly', 'Monthly'),
+    ]
+    recurrence_rule = models.CharField(max_length=20, choices=RECURRENCE_CHOICES, default='none', blank=True)
+    last_recurred_at = models.DateField(null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -344,6 +355,8 @@ class Team(models.Model):
 class SharedNote(models.Model):
     title = models.CharField(max_length=200, default="Untitled Note")
     content = CKEditor5Field(config_name='extends', blank=True)
+    # Notion-style Wikis (Phase 25)
+    parent_note = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='child_notes', help_text="Nest under another note to create a Wiki")
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='shared_notes')
     shared_with_teams = models.ManyToManyField(Team, related_name='shared_notes', blank=True)
     shared_with_users = models.ManyToManyField(User, related_name='received_notes', blank=True)

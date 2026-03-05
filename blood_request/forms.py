@@ -30,12 +30,13 @@ class TaskForm(forms.ModelForm):
 
     class Meta:
         model = Task
-        fields = ['title', 'description', 'priority', 'status', 'assigned_to', 'due_date']
+        fields = ['title', 'description', 'priority', 'status', 'assigned_to', 'due_date', 'recurrence_rule']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'w-full px-4 py-2 border rounded-lg focus:ring-brand-red focus:border-brand-blue'}),
             'description': forms.Textarea(attrs={'class': 'w-full px-4 py-2 border rounded-lg focus:ring-brand-red focus:border-brand-blue', 'rows': 3}),
             'priority': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded-lg focus:ring-brand-red focus:border-brand-blue'}),
             'status': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded-lg focus:ring-brand-red focus:border-brand-blue'}),
+            'recurrence_rule': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded-lg focus:ring-brand-red focus:border-brand-blue'}),
         }
 
 from .models import Blog

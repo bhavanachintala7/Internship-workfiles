@@ -743,7 +743,11 @@ def shared_note_create(request):
             messages.success(request, "Shared Note created successfully!")
             return redirect('manager_dashboard')
     else:
-        form = SharedNoteForm()
+        initial_data = {}
+        parent_id = request.GET.get('parent')
+        if parent_id and parent_id.isdigit():
+            initial_data['parent_note'] = parent_id
+        form = SharedNoteForm(initial=initial_data)
     
     return render(request, 'blood_request/shared_note_form.html', {'form': form})
 
@@ -818,7 +822,17 @@ def shared_note_detail(request, pk):
         messages.error(request, "You do not have permission to view this note.")
         return redirect('staff_dashboard')
         
-    return render(request, 'blood_request/shared_note_detail.html', {'note': note})
+    # Generate Wiki Breadcrumbs (Phase 25)
+    breadcrumbs = []
+    current = note.parent_note
+    while current:
+        breadcrumbs.insert(0, current)
+        current = current.parent_note
+
+    return render(request, 'blood_request/shared_note_detail.html', {
+        'note': note,
+        'breadcrumbs': breadcrumbs
+    })
 
 @login_required
 @user_passes_test(is_manager)
