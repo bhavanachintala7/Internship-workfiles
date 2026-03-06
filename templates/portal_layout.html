@@ -180,6 +180,38 @@
                 <span class="group-[.collapsed]/sidebar:hidden whitespace-nowrap">Calendar & Appointments</span>
             </a>
 
+            <!-- Database Management Links -->
+            <a href="{% url 'task_list_portal' %}"
+                class="w-full flex items-center px-2 py-1 hover:bg-[#efefed] rounded-md text-[14px] transition-colors {% if 'tasks' in request.path %}bg-[#efefed] font-medium text-[#37352f]{% else %}font-medium{% endif %}"
+                title="Tasks">
+                <i
+                    class="fa-solid fa-list-check w-4 h-4 mr-2.5 opacity-70 flex items-center justify-center text-xs"></i>
+                <span class="group-[.collapsed]/sidebar:hidden whitespace-nowrap">Tasks</span>
+            </a>
+
+            <a href="{% url 'subtask_list_portal' %}"
+                class="w-full flex items-center px-2 py-1 hover:bg-[#efefed] rounded-md text-[14px] transition-colors {% if 'subtasks' in request.path %}bg-[#efefed] font-medium text-[#37352f]{% else %}font-medium{% endif %}"
+                title="Sub Tasks">
+                <i
+                    class="fa-solid fa-diagram-project w-4 h-4 mr-2.5 opacity-70 flex items-center justify-center text-xs"></i>
+                <span class="group-[.collapsed]/sidebar:hidden whitespace-nowrap">Sub Tasks</span>
+            </a>
+
+            <a href="{% url 'team_list' %}"
+                class="w-full flex items-center px-2 py-1 hover:bg-[#efefed] rounded-md text-[14px] transition-colors {% if 'teams' in request.path and 'manager' not in request.path %}bg-[#efefed] font-medium text-[#37352f]{% else %}font-medium{% endif %}"
+                title="Teams">
+                <i
+                    class="fa-solid fa-users-viewfinder w-4 h-4 mr-2.5 opacity-70 flex items-center justify-center text-[11px]"></i>
+                <span class="group-[.collapsed]/sidebar:hidden whitespace-nowrap">Teams</span>
+            </a>
+
+            <a href="{% url 'shared_note_list' %}"
+                class="w-full flex items-center px-2 py-1 hover:bg-[#efefed] rounded-md text-[14px] transition-colors {% if 'shared-notes' in request.path %}bg-[#efefed] font-medium text-[#37352f]{% else %}font-medium{% endif %}"
+                title="Shared Notes">
+                <i class="fa-solid fa-book-open w-4 h-4 mr-2.5 opacity-70 flex items-center justify-center text-xs"></i>
+                <span class="group-[.collapsed]/sidebar:hidden whitespace-nowrap">Shared Notes</span>
+            </a>
+
             <div class="mt-4 mb-1">
                 <div
                     class="flex items-center justify-between px-2 group/header hover:bg-[#efefed] rounded-sm cursor-pointer py-0.5">
@@ -598,23 +630,25 @@
         }
 
         // Quick Switcher Logic
-        const qsLinks = [
-            { name: "Personal Dashboard", url: "{% url 'staff_dashboard' %}", category: "Pages", icon: "dashboard" },
-            { name: "Workspaces", url: "{% url 'workspace_list' %}", category: "Pages", icon: "folder" },
-            {% if perms.blood_request.add_team %}
-        { name: "Team Overview", url: "{% url 'manager_dashboard' %}", category: "Pages", icon: "chart" },
-        { name: "Users Management", url: "{% url 'user_list' %}", category: "Pages", icon: "users" },
-        { name: "Teams List", url: "{% url 'team_list' %}", category: "Pages", icon: "users" },
-        {% endif %}
-        { name: "Calendar & Appointments", url: "{% url 'appointment_list' %}", category: "Pages", icon: "calendar" },
-        { name: "My Profile", url: "{% url 'profile_edit' %}", category: "Pages", icon: "user" },
-        { name: "Create Task", url: "{% url 'task_create' %}", category: "Actions", icon: "plus" },
-        { name: "Create Shared Note", url: "{% url 'shared_note_create' %}", category: "Actions", icon: "plus" },
+        const qsLinks = [];
+        qsLinks.push({ name: "Personal Dashboard", url: "{% url 'staff_dashboard' %}", category: "Pages", icon: "dashboard" });
+        qsLinks.push({ name: "Workspaces", url: "{% url 'workspace_list' %}", category: "Pages", icon: "folder" });
+
         {% if perms.blood_request.add_team %}
-        { name: "Create Team", url: "{% url 'team_create' %}", category: "Actions", icon: "plus" },
-        { name: "Create Workspace", url: "{% url 'workspace_create' %}", category: "Actions", icon: "plus" },
+        qsLinks.push({ name: "Team Overview", url: "{% url 'manager_dashboard' %}", category: "Pages", icon: "chart" });
+        qsLinks.push({ name: "Users Management", url: "{% url 'user_list' %}", category: "Pages", icon: "users" });
+        qsLinks.push({ name: "Teams List", url: "{% url 'team_list' %}", category: "Pages", icon: "users" });
         {% endif %}
-        ];
+
+        qsLinks.push({ name: "Calendar & Appointments", url: "{% url 'appointment_list' %}", category: "Pages", icon: "calendar" });
+        qsLinks.push({ name: "My Profile", url: "{% url 'profile_edit' %}", category: "Pages", icon: "user" });
+        qsLinks.push({ name: "Create Task", url: "{% url 'task_create' %}", category: "Actions", icon: "plus" });
+        qsLinks.push({ name: "Create Shared Note", url: "{% url 'shared_note_create' %}", category: "Actions", icon: "plus" });
+
+        {% if perms.blood_request.add_team %}
+        qsLinks.push({ name: "Create Team", url: "{% url 'team_create' %}", category: "Actions", icon: "plus" });
+        qsLinks.push({ name: "Create Workspace", url: "{% url 'workspace_create' %}", category: "Actions", icon: "plus" });
+        {% endif %}
 
         const qsModal = document.getElementById('quick-switcher');
         const qsInput = document.getElementById('qs-search');
