@@ -35,16 +35,15 @@
         }
     </script>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/nav.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nav.css' %}?v=4">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=4">
     {% block extra_css %}{% endblock %}
 </head>
 
 <body class="bg-gray-50 text-gray-800 font-sans antialiased">
 
     <!-- Navigation -->
-    <!-- Navigation -->
-    <nav>
+    <nav class="main-nav">
         <div class="nav-container">
             <div class="logo">
                 <a href="{% url 'home' %}">
@@ -80,6 +79,16 @@
 
             <a href="#" class="dropdown-item">FAQs</a>
           
+
+                        <a href="{% url 'aboutus' %}" class="dropdown-item">About</a>
+                        <a href="{% url 'our_mission_values' %}" class="dropdown-item">Our Mission & Values</a>
+                        <a href="#" class="dropdown-item">Appreciation and Accolades</a>
+                        <a href="#" class="dropdown-item">Our Partners</a>
+                        <a href="{% url 'our_policies' %}" class="dropdown-item">Our Policies</a>
+                        <a href="#" class="dropdown-item">Contact Us</a>
+                        <a href="#" class="dropdown-item">Our Team</a>
+                        <a href="#" class="dropdown-item">FAQs</a>
+
                         <!-- Admin Link for Reference, hidden usually or styled differently -->
                         <a href="/admin/" target="_blank" class="dropdown-item"
                             style="color: #ccc; font-size: 11px;">Admin Panel</a>
@@ -93,9 +102,9 @@
                         <a href="{% url 'career_fellowship' %}" class="dropdown-item">Career and Fellowship</a>
                         <a href="{% url 'workplace_living' %}" class="dropdown-item">Workplace Giving</a>
                         <a href="{% url 'volunteering' %}" class="dropdown-item">Volunteering</a>
-                        <a href="#" class="dropdown-item">Internships</a>
+                        <a href="{% url 'internships' %}" class="dropdown-item">Internships</a>
                         <a href="{% url 'campus_ambassador' %}" class="dropdown-item">Campus Ambassador</a>
-                        <a href="#" class="dropdown-item">Jobs at UDAAN Society</a>
+                        <a href="{% url 'jobs' %}" class="dropdown-item">Jobs at UDAAN Society</a>
                     </div>
                 </li>
                 <li class="nav-item">

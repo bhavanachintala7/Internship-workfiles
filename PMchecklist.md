@@ -16,7 +16,7 @@ This document tracks the implementation status of the Project Management (PM) an
 - [x] **Staff Dashboard**: Personalized Kanban-style view of assigned tasks.
 - [x] **Manager Dashboard**: High-level overview of organization-wide tasks.
 - [x] **Announcements**: Digital bulletin board for staff alerts.
-- [ ] **Advanced Filtering**: Filtering tasks by project, date range, or specific assignee in the frontend.
+- [x] **Advanced Filtering**: Filtering tasks by project, date range, or specific assignee in the frontend.
 
 ### Field Operations (GPS)
 - [x] **Data Structure**: `Task` model includes `completion_lat`, `completion_lng`, and timestamp fields.
@@ -35,7 +35,7 @@ This document tracks the implementation status of the Project Management (PM) an
 - [x] **Interaction Model**: Database structure to log Calls, Meetings, Emails, and Visits (`Interaction` model).
 - [x] **Outcome Tracking**: Support for outcomes like "Interested", "Follow-up", "Closed".
 - [x] **Interaction Logging UI**: Frontend forms for staff to record calls/meetings.
-- [ ] **Auto-Task Generation**: Logic to automatically create follow-up tasks based on interaction outcomes.
+- [x] **Auto-Task Generation**: Logic to automatically create follow-up tasks based on interaction outcomes.
 
 ### Scheduling
 - [x] **Appointment Calendar**: Visual calendar for upcoming meetings/drives.
@@ -51,8 +51,8 @@ This document tracks the implementation status of the Project Management (PM) an
 - [x] **Blood Requests**: Public form for blood requests and backend management.
 
 ### Reporting
-- [x] **Basic Stats**: Dashboard counters for Donors and Active Tasks.
-- [x] **Export**: Ability to export donor lists or task reports to CSV/Excel.
+- [x] **Basic Stats**: Dashboard counters for Active Tasks.
+- [x] **Export**: Ability to export task lists or task reports to CSV/Excel.
 
 ---
 
@@ -60,7 +60,7 @@ This document tracks the implementation status of the Project Management (PM) an
 
 ### Biziverse Interconnectedness (Unified Interactions)
 - [x] **Interaction Logging**: Calls/Emails/Meetings tracking (partially done in CRM).
-- [x] **Timeline View**: A single view showing history of a donor (donations, calls, tasks).
+- [x] **Timeline View**: A single view showing history of a any task or log  (donations, calls, tasks).
 
 ### Zoho Workflow Rules (Automated Workflows)
 - [X] **Data Model**: Configurable "Rules" model (Trigger -> Condition -> Action).
