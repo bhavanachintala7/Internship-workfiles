@@ -9,7 +9,17 @@ from .models import (
     PersonalNote, Team, SharedNote, NewsClipping, Blog
 )
 
-admin.site.register(PolicyReport)
+@admin.register(PolicyReport)
+class PolicyReportAdmin(admin.ModelAdmin):
+    list_display = ('title', 'category', 'uploaded_at')
+    list_filter = ('category',)
+    search_fields = ('title',)
+
+@admin.register(Report)
+class ReportAdmin(admin.ModelAdmin):
+    list_display = ('title', 'published_date', 'created_at')
+    search_fields = ('title',)
+
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):
     list_display = ('author', 'role', 'is_active', 'created_at')
@@ -86,7 +96,16 @@ class CampaignAdmin(admin.ModelAdmin):
 
 from .models import CampusAmbassador, CampusAmbassadorApplication
 
+@admin.register(CampusAmbassador)
+class CampusAmbassadorAdmin(admin.ModelAdmin):
+    list_display = ('name', 'college', 'city', 'created_at')
+    search_fields = ('name', 'college')
 
+@admin.register(CampusAmbassadorApplication)
+class CampusAmbassadorApplicationAdmin(admin.ModelAdmin):
+    list_display = ('full_name', 'college', 'status', 'applied_at')
+    list_filter = ('status',)
+    search_fields = ('full_name', 'college', 'email')
 
 @admin.register(NewsClipping)
 class NewsClippingAdmin(admin.ModelAdmin):

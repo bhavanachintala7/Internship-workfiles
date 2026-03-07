@@ -19,30 +19,30 @@
     --success: #27ae60;
     --info: #3498db;
     --warning: #f39c12;
-    
+
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     --gradient-progress: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
-    
+
     /* Shadows */
-    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
-    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
-    --shadow-xl: 0 20px 25px rgba(0,0,0,0.15);
-    --shadow-hover: 0 12px 30px rgba(0,0,0,0.15);
-    
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+    --shadow-hover: 0 12px 30px rgba(0, 0, 0, 0.15);
+
     /* Transitions */
     --transition-fast: 0.15s ease;
     --transition-base: 0.3s ease;
     --transition-slow: 0.5s ease;
-    
+
     /* Border Radius */
     --radius-sm: 6px;
     --radius-md: 8px;
     --radius-lg: 12px;
     --radius-xl: 16px;
     --radius-full: 9999px;
-    
+
     /* Spacing */
     --space-xs: 0.25rem;
     --space-sm: 0.5rem;
@@ -51,14 +51,16 @@
     --space-xl: 2rem;
     --space-2xl: 3rem;
     --space-3xl: 4rem;
-    
+
     /* Container */
     --container-max: 1400px;
     --container-padding: 5%;
 }
 
 /* Reset & Base */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -132,8 +134,10 @@ button {
 .hero {
     position: relative;
     height: 400px;
-    background: 
-        linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+    margin-top: 80px;
+    /* Account for fixed navbar */
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
         url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1200') center/cover;
     display: flex;
     align-items: center;
@@ -149,7 +153,7 @@ button {
     font-size: clamp(2.5rem, 8vw, 4rem);
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     font-weight: 800;
 }
 
@@ -434,8 +438,15 @@ button {
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
 }
 
 /* Quick Donate Button */
@@ -515,7 +526,7 @@ button {
     right: 0;
     bottom: 0;
     width: 20px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3));
 }
 
 /* Card Title & Description */
@@ -761,7 +772,7 @@ button {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--space-xl);
     }
-    
+
     .cta-box {
         flex-direction: column;
         text-align: center;
@@ -772,7 +783,7 @@ button {
     .mobile-menu {
         display: block;
     }
-    
+
     .nav-links {
         position: absolute;
         top: 100%;
@@ -788,13 +799,13 @@ button {
         transform: translateY(-10px);
         transition: all var(--transition-base);
     }
-    
+
     .nav-links.active {
         opacity: 1;
         visibility: visible;
         transform: translateY(0);
     }
-    
+
     .dropdown-content {
         position: static;
         opacity: 1;
@@ -803,11 +814,11 @@ button {
         box-shadow: none;
         padding-left: var(--space-lg);
     }
-    
+
     .hero {
         height: 300px;
     }
-    
+
     .filter-container {
         flex-wrap: nowrap;
         overflow-x: auto;
@@ -815,28 +826,28 @@ button {
         padding-bottom: var(--space-sm);
         -webkit-overflow-scrolling: touch;
     }
-    
+
     .filter-btn {
         flex-shrink: 0;
     }
-    
+
     .controls-bar {
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .search-box {
         max-width: none;
     }
-    
+
     .campaigns-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .card-image {
         height: 200px;
     }
-    
+
     .toast {
         left: var(--space-md);
         right: var(--space-md);
@@ -848,11 +859,11 @@ button {
     .stat-number {
         font-size: 2rem;
     }
-    
+
     .cta-box {
         padding: var(--space-xl);
     }
-    
+
     .quick-donate {
         opacity: 1;
         transform: scale(1);
