@@ -458,11 +458,12 @@
 <!-- SortableJS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 <script>
+    var calendar; // Declared in outer scope so the view toggler can access it
     document.addEventListener('DOMContentLoaded', function () {
         // Initialize Calendar
         var calendarEl = document.getElementById('calendar');
         if (calendarEl) {
-            var calendar = new FullCalendar.Calendar(calendarEl, {
+            calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 headerToolbar: {
                     left: 'prev,next today',
