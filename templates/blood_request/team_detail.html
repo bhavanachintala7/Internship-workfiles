@@ -53,14 +53,6 @@
                 {% endfor %}
             </ul>
 
-            {% if request.user.is_superuser or is_manager %}
-            <div class="mt-6 pt-4 border-t border-gray-100 text-center">
-                <a href="{% url 'admin:blood_request_team_change' team.id %}" target="_blank"
-                    class="text-xs text-gray-400 hover:text-gray-600 flex items-center justify-center">
-                    <i class="fas fa-cog mr-1"></i> Manage Team in Admin
-                </a>
-            </div>
-            {% endif %}
         </div>
     </div>
 

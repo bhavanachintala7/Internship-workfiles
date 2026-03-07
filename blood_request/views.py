@@ -310,7 +310,7 @@ def manager_dashboard(request):
 
     # 3. Resource Allocation (Phase 7.2)
     # Count open tasks (Not Done) for each staff member
-    staff_load = User.objects.filter(is_staff=False, is_superuser=False).annotate(
+    staff_load = User.objects.filter(is_superuser=False).annotate(
         active_task_count=Count('tasks', filter=~Q(tasks__status='Done'))
     ).order_by('-active_task_count')
 

@@ -51,8 +51,8 @@ This document tracks the implementation status of the Project Management (PM) an
 - [x] **Blood Requests**: Public form for blood requests and backend management.
 
 ### Reporting
-- [x] **Basic Stats**: Dashboard counters for Donors and Active Tasks.
-- [x] **Export**: Ability to export donor lists or task reports to CSV/Excel.
+- [x] **Basic Stats**: Dashboard counters for Active Tasks.
+- [x] **Export**: Ability to export task lists or task reports to CSV/Excel.
 
 ---
 
@@ -60,7 +60,7 @@ This document tracks the implementation status of the Project Management (PM) an
 
 ### Biziverse Interconnectedness (Unified Interactions)
 - [x] **Interaction Logging**: Calls/Emails/Meetings tracking (partially done in CRM).
-- [x] **Timeline View**: A single view showing history of a donor (donations, calls, tasks).
+- [x] **Timeline View**: A single view showing history of a any task or log  (donations, calls, tasks).
 
 ### Zoho Workflow Rules (Automated Workflows)
 - [X] **Data Model**: Configurable "Rules" model (Trigger -> Condition -> Action).
