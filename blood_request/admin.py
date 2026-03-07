@@ -67,15 +67,9 @@ class BloodRequestAdmin(admin.ModelAdmin):
     list_filter = ('blood_group', 'city', 'status')
     readonly_fields = ('status',)
 
-@admin.register(Report)
-class ReportAdmin(admin.ModelAdmin):
-    list_display = ('title', 'published_date', 'created_at')
-
-@admin.register(Project)
-class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('title', 'date', 'created_at', 'slug')
-    filter_horizontal = ('managers',) # Better UI for ManyToMany
-    prepopulated_fields = {'slug': ('title',)}
+@admin.register(Blog)
+class BlogAdmin(admin.ModelAdmin):
+    list_display = ('title', 'created_at')
 
 @admin.register(Campaign)
 class CampaignAdmin(admin.ModelAdmin):
@@ -84,32 +78,9 @@ class CampaignAdmin(admin.ModelAdmin):
     def target_vs_raised(self, obj):
         return f"{obj.raised_amount} / {obj.goal_amount}"
 
-class SubTaskInline(admin.TabularInline):
-    model = SubTask
-    extra = 1
-
-@admin.register(Task)
-class TaskAdmin(admin.ModelAdmin):
-    list_display = ('title', 'project', 'assigned_to', 'status', 'priority', 'due_date')
-    list_filter = ('status', 'priority', 'project', 'assigned_to')
-    search_fields = ('title', 'description')
-    inlines = [SubTaskInline]
-    
-    # Note: Email logic moved to signals.py in Phase 5
-
-@admin.register(Blog)
-class BlogAdmin(admin.ModelAdmin):
-    list_display = ('title', 'created_at')
-
-@admin.register(Team)
-class TeamAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created_by', 'created_at')
-    filter_horizontal = ('members',)
-
-@admin.register(SharedNote)
-class SharedNoteAdmin(admin.ModelAdmin):
-    list_display = ('title', 'owner', 'created_at')
-    filter_horizontal = ('shared_with_teams', 'shared_with_users')
+# Note: Internal workspace tools (Project, Task, SubTask, Team, SharedNote) 
+# have been explicitly removed from the Admin panel and migrated to the UDAAN Portal 
+# for a unified Notion-like workspace experience.
 
 
 

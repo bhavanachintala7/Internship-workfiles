@@ -44,8 +44,8 @@ INSTALLED_APPS = [
 
 CKEDITOR_5_CONFIGS = {
     'default': {
-        'toolbar': ['heading', '|', 'bold', 'italic', 'link',
-                    'bulletedList', 'numberedList', 'blockQuote', 'imageUpload', ],
+        'toolbar': ['heading', '|', 'bold', 'italic', 'fontSize', 'fontFamily', 'link',
+                    'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'imageUpload', ],
 
     },
     'extends': {
@@ -125,6 +125,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "blood_request.context_processors.shared_notes_processor",
             ],
         },
     },

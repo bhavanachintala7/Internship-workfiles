@@ -8,9 +8,9 @@ from .models import BloodDonor, BloodRequest
 from .schemas import DonorSchema
 from pydantic import ValidationError
 # from django.shortcuts import render
-from .models import Blog, Project, Task
+from .models import Blog, Project, Task, SubTask, Team
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import permission_required, user_passes_test
 from .models import CampusAmbassador
 from .models import PolicyReport
 
@@ -154,6 +154,7 @@ def staff_dashboard(request):
         'todo_tasks': todo_tasks,
         'inprogress_tasks': inprogress_tasks,
         'done_tasks': done_tasks,
+        'all_tasks': all_tasks,
         'announcements': announcements,
         'total_donors': total_donors,
         'recent_activity': recent_activity,
@@ -457,21 +458,40 @@ from django.http import JsonResponse
 
 @login_required
 def personal_notes_api(request):
-    """API to get/save personal notes"""
-    # Use get_or_create to ensure a note exists
+    """API to get/save personal notes. Parses @mentions and creates Notifications."""
     note, created = PersonalNote.objects.get_or_create(user=request.user)
-    
+
     if request.method == 'POST':
-        import json
+        import json, re
         try:
             data = json.loads(request.body)
-            note.content = data.get('content', '')
+            new_content = data.get('content', '')
+            note.content = new_content
             note.save()
-            return JsonResponse({'status': 'saved', 'updated_at': note.updated_at})
+
+            # --- @mention parsing ---
+            from django.contrib.auth.models import User as AuthUser
+            from .models import Notification
+            mentions = set(re.findall(r'@(\w+)', new_content))
+            for username in mentions:
+                try:
+                    mentioned_user = AuthUser.objects.get(username=username)
+                    if mentioned_user != request.user:
+                        Notification.objects.create(
+                            user=mentioned_user,
+                            actor=request.user,
+                            message=f"{request.user.get_full_name() or request.user.username} mentioned you in a note.",
+                            link='/admin/portal/',
+                        )
+                except AuthUser.DoesNotExist:
+                    pass
+            # -------------------------
+
+            return JsonResponse({'status': 'saved', 'updated_at': str(note.updated_at)})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-    
-    return JsonResponse({'content': note.content, 'updated_at': note.updated_at})
+
+    return JsonResponse({'content': note.content, 'updated_at': str(note.updated_at)})
 
 def resources_page(request):
     """Render the resources page"""
@@ -568,6 +588,39 @@ def export_requests_csv(request):
         writer.writerow(req)
 
     return response
+
+@login_required
+def notifications_api(request):
+    """Return the logged-in user's notifications as JSON."""
+    from .models import Notification
+    base_qs = Notification.objects.filter(user=request.user).order_by('-created_at')
+    unread_count = base_qs.filter(is_read=False).count()
+    notifs = base_qs[:30]
+    data = {
+        'unread_count': unread_count,
+        'notifications': [
+            {
+                'id': n.id,
+                'message': n.message,
+                'link': n.link,
+                'is_read': n.is_read,
+                'created_at': n.created_at.strftime('%b %d, %Y %H:%M'),
+            }
+            for n in notifs
+        ],
+    }
+    return JsonResponse(data)
+
+
+@login_required
+def mark_notifications_read(request):
+    """Mark all notifications for the current user as read."""
+    if request.method == 'POST':
+        from .models import Notification
+        Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
+        return JsonResponse({'status': 'ok'})
+    return JsonResponse({'error': 'POST required'}, status=405)
+
 
 @login_required
 def calendar_events_api(request):
@@ -691,7 +744,11 @@ def shared_note_create(request):
             messages.success(request, "Shared Note created successfully!")
             return redirect('manager_dashboard')
     else:
-        form = SharedNoteForm()
+        initial_data = {}
+        parent_id = request.GET.get('parent')
+        if parent_id and parent_id.isdigit():
+            initial_data['parent_note'] = parent_id
+        form = SharedNoteForm(initial=initial_data)
     
     return render(request, 'blood_request/shared_note_form.html', {'form': form})
 
@@ -766,7 +823,31 @@ def shared_note_detail(request, pk):
         messages.error(request, "You do not have permission to view this note.")
         return redirect('staff_dashboard')
         
-    return render(request, 'blood_request/shared_note_detail.html', {'note': note})
+    can_edit = request.user == note.owner or is_manager(request.user)
+    
+    if request.method == 'POST' and can_edit:
+        form = SharedNoteForm(request.POST, request.FILES, instance=note)
+        if form.is_valid():
+            form.save()
+            from django.contrib import messages
+            messages.success(request, "Note updated successfully.")
+            return redirect('shared_note_detail', pk=pk)
+    else:
+        form = SharedNoteForm(instance=note) if can_edit else None
+
+    # Generate Wiki Breadcrumbs (Phase 25)
+    breadcrumbs = []
+    current = note.parent_note
+    while current:
+        breadcrumbs.insert(0, current)
+        current = current.parent_note
+
+    return render(request, 'blood_request/shared_note_detail.html', {
+        'note': note,
+        'breadcrumbs': breadcrumbs,
+        'form': form,
+        'can_edit': can_edit
+    })
 
 @login_required
 @user_passes_test(is_manager)
@@ -806,19 +887,22 @@ def team_remove_member(request, team_pk, user_pk):
 
 
 @login_required
-def shared_note_detail(request, pk):
+def shared_note_delete(request, pk):
     note = get_object_or_404(SharedNote, pk=pk)
-    # Access check: Owner OR in shared_with_teams members OR shared_with_users
-    has_access = (note.owner == request.user) or \
-                 (note.shared_with_users.filter(id=request.user.id).exists()) or \
-                 (note.shared_with_teams.filter(members=request.user).exists())
-                 
-    if not has_access and not is_manager(request.user):
+    
+    # Only owner or manager can delete
+    if not (request.user == note.owner or is_manager(request.user)):
         from django.contrib import messages
-        messages.error(request, "Access Denied")
-        return redirect('staff_dashboard')
+        messages.error(request, "Only the owner or a manager can delete this note.")
+        return redirect('shared_note_detail', pk=pk)
         
-    return render(request, 'blood_request/shared_note_detail.html', {'note': note})
+    if request.method == 'POST':
+        note.delete()
+        from django.contrib import messages
+        messages.success(request, "Wiki page deleted successfully.")
+        return redirect('shared_note_list')
+        
+    return render(request, 'blood_request/shared_note_confirm_delete.html', {'note': note})
 
 # --- Phase 18: Portal User Management ---
 @login_required
@@ -911,6 +995,7 @@ def internships(request):
 def our_mission_values(request):
     return render(request, 'ourmission_values.html')
 
+
 def our_policies(request):
     return render(request, "our_policies.html")
 
@@ -931,3 +1016,100 @@ def our_policies(request):
     }
 
     return render(request,"our_policies.html",context)
+
+# --- Phase: Move Admin to Portal ---
+from django.views.generic import ListView, UpdateView, CreateView
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+
+@method_decorator(user_passes_test(is_manager), name='dispatch')
+class TaskListView(ListView):
+    model = Task
+    template_name = 'blood_request/portal_list.html'
+    context_object_name = 'items'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Manage Tasks'
+        context['create_url'] = 'task_create_portal'
+        context['update_url_name'] = 'task_update_portal'
+        return context
+
+@method_decorator(user_passes_test(is_manager), name='dispatch')
+class TaskUpdateView(UpdateView):
+    model = Task
+    fields = ['title', 'project', 'description', 'assigned_to', 'status', 'priority', 'due_date', 'recurrence_rule']
+    template_name = 'blood_request/portal_form.html'
+    success_url = reverse_lazy('task_list_portal')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = f'Update Task: {self.object.title}'
+        context['back_url'] = reverse_lazy('task_list_portal')
+        return context
+
+@method_decorator(user_passes_test(is_manager), name='dispatch')
+class TaskCreateView(CreateView):
+    model = Task
+    fields = ['title', 'project', 'description', 'assigned_to', 'status', 'priority', 'due_date', 'recurrence_rule']
+    template_name = 'blood_request/portal_form.html'
+    success_url = reverse_lazy('task_list_portal')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Create Task'
+        context['back_url'] = reverse_lazy('task_list_portal')
+        return context
+
+@method_decorator(user_passes_test(is_manager), name='dispatch')
+class SubTaskListView(ListView):
+    model = SubTask
+    template_name = 'blood_request/portal_list.html'
+    context_object_name = 'items'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Manage SubTasks'
+        context['create_url'] = 'subtask_create_portal'
+        context['update_url_name'] = 'subtask_update_portal'
+        return context
+
+@method_decorator(user_passes_test(is_manager), name='dispatch')
+class SubTaskCreateView(CreateView):
+    model = SubTask
+    fields = ['title', 'parent_task', 'assigned_to', 'status']
+    template_name = 'blood_request/portal_form.html'
+    success_url = reverse_lazy('subtask_list_portal')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Create SubTask'
+        context['back_url'] = reverse_lazy('subtask_list_portal')
+        return context
+
+@method_decorator(user_passes_test(is_manager), name='dispatch')
+class SubTaskUpdateView(UpdateView):
+    model = SubTask
+    fields = ['title', 'parent_task', 'assigned_to', 'status']
+    template_name = 'blood_request/portal_form.html'
+    success_url = reverse_lazy('subtask_list_portal')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = f'Update SubTask: {self.object.title}'
+        context['back_url'] = reverse_lazy('subtask_list_portal')
+        return context
+
+@method_decorator(user_passes_test(is_manager), name='dispatch')
+class TeamUpdateView(UpdateView):
+    model = Team
+    fields = ['name', 'description', 'workspace']
+    template_name = 'blood_request/portal_form.html'
+    success_url = reverse_lazy('team_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = f'Update Team: {self.object.name}'
+        context['back_url'] = reverse_lazy('team_list')
+        return context
+
